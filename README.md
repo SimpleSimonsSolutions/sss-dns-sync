@@ -1,5 +1,7 @@
 Plesk Extension to sync changes to Plesk DNS zones to an external primary (typically the domain registrar)
 
+Various references that may be useful:
+
 https://docs.plesk.com/en-US/obsidian/extensions-guide/plesk-features-available-for-extensions/subscribe-to-plesk-events/add-custom-events.77318/
 
 * * * * * *

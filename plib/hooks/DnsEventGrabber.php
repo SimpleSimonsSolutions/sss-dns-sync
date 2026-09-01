@@ -71,7 +71,7 @@
 
     // Now call Dns provider's API Interface
     $DnsProvider = 'Ionos'; // Hardcoded for now - later we will get this from the module settings
-    $apiKey = '797a08f724bc44d48bc22e14c0a5d7e5.-OOIUb8Jyn8se5vMo2rgdl3vKXT4D-XecwFT--BKLqcrtFUYxugwqzl-pXEeLhqZh35yFVYEFjHbqhYLma9jkw';
+    $apiKey = '.--INSERT API KEY HERE--';
     // /opt/psa/admin/plib/modules/sss-dns-sync/plib/ 
     $scriptPath = pm_Context::getPlibDir() . "library/DnsApis/{$DnsProvider}.php";
     // $scriptPath = "/opt/psa/admin/plib/modules/sss-dns-sync/plib/library/DnsApis/{$DnsProvider}.php";
