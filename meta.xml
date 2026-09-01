@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2025. Simple Simon's Solutions. ALl rights reserved. -->
+<module>
+  <id>sss-dns-sync</id>
+  <name>SSS DNS Sync</name>
+  <description>Sync Plesk DNS records to external DNS provider.</description>
+  <category>dns</category>
+  <category>server_tool</category>
+  <version>1.0</version>
+  <release>2</release>
+  <vendor>Simple Simon's Solutions</vendor>
+  <url>https://simplesimonssolutions.com</url>
+  <buy_url>https://simplesimonssolutions.com/</buy_url>
+  <help_url>https://simplesimonssolutions.com/documentation</help_url>
+  <support_url>https://simplesimonssolutions.com/support</support_url>
+  <plesk_min_version>18.0</plesk_min_version>
+</module>

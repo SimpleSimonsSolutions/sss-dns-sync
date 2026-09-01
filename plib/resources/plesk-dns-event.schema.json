@@ -1,0 +1,234 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/plesk-dns-event.schema.json",
+    "$comment": "https://x.com/i/grok?conversation=1949223611530703142",
+
+    "title": "Plesk Backend DNS Event",
+    "description": "JSON schema for input parameters passed to a Plesk integration script for third-party DNS backend commands",
+    "type": "object",
+    "properties": {
+        "command": {
+            "description": "The operation to be performed on the specified zone or reverse record",
+            "type": "string",
+            "enum": ["create", "update", "delete", "createPTRs", "deletePTRs"]
+        },
+        "zone": {
+            "type": "object",
+            "description": "Details about the DNS zone affected by the command",
+            "properties": {
+                "name": {
+                    "description": "The name of the zone (e.g., example.com), including IDN to ASCII conversion if applicable",
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-\\.]{0,61}[a-zA-Z0-9]$",
+                    "minLength": 1,
+                    "maxLength": 253
+                },
+                "displayName": {
+                    "description": "The name of the zone without IDN to ASCII conversion (e.g., for display purposes)",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 253
+                },
+                "soa": {
+                    "description": "Information about the SOA resource record in the zone",
+                    "type": "object",
+                    "properties": {
+                        "email": {
+                            "description": "Contact email for the zone's SOA record (e.g., admin@example.com)",
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "status": {
+                            "description": "Status of the SOA record, always 0 for Plesk",
+                            "type": "integer",
+                            "const": 0
+                        },
+                        "type": {
+                            "description": "Type of the DNS server, always master for Plesk",
+                            "type": "string",
+                            "const": "master"
+                        },
+                        "ttl": {
+                            "description": "Time in seconds that other DNS servers should cache the SOA record",
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 86400
+                        },
+                        "refresh": {
+                            "description": "Time in seconds how often secondary name servers check for changes to the zone file",
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 86400
+                        },
+                        "retry": {
+                            "description": "Time in seconds a secondary server waits before retrying a failed zone transfer",
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 7200
+                        },
+                        "expire": {
+                            "description": "Time in seconds before a secondary server stops responding after a lapsed refresh interval",
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 3600000
+                        },
+                        "minimum": {
+                            "description": "Time in seconds a secondary server should cache a negative response",
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 86400
+                        },
+                        "serial": {
+                            "description": "The number that identifies the state of the zone, using Unix timestamp",
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "serial_format": {
+                            "description": "Format of the SOA serial, always UNIXTIMESTAMP for Plesk",
+                            "type": "string",
+                            "enum": ["UNIXTIMESTAMP"]
+                        },
+                        "rr": {
+                            "description": "Information about resource records within the specified zone, provided for create or update commands",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "host": {
+                                        "description": "The host name of a node within the zone (e.g., www or @)",
+                                        "type": "string",
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-\\.]{0,61}[a-zA-Z0-9]?$",
+                                        "maxLength": 63
+                                    },
+                                    "displayHost": {
+                                        "description": "The host name without IDN to ASCII conversion",
+                                        "type": "string",
+                                        "maxLength": 63
+                                    },
+                                    "type": {
+                                        "description": "Type of the DNS record",
+                                        "type": "string",
+                                        "enum": ["A", "AAAA", "CNAME", "MX", "NS", "TXT", "SRV", "PTR", "SOA", "HTTPS"]
+                                    },
+                                    "opt": {
+                                        "description": "Optional part of the record value, excluding IP or hostname (e.g., priority for MX)",
+                                        "type": "string",
+                                        "minLength": 0
+                                    },
+                                    "value": {
+                                        "description": "Value of the resource record (e.g., IP address for A, hostname for CNAME)",
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "displayValue": {
+                                        "description": "Value of the resource record without IDN to ASCII conversion",
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "ttl": {
+                                        "description": "Time-to-live for the DNS record in seconds",
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "default": 3600
+                                    }
+                                },
+                                "required": ["host", "type", "value"],
+                                "additionalProperties": false
+                            },
+                            "minItems": 0
+                        }
+                    },
+                    "required": ["email", "status", "type", "serial", "serial_format"],
+                    "additionalProperties": false
+                }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+        },
+        "ptr": {
+            "description": "Information about reverse (PTR) records, provided for createPTRs or deletePTRs commands",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ip_address": {
+                        "description": "The reverse record’s IP address (IPv4 or IPv6)",
+                        "type": "string",
+                        "format": "ip"
+                    },
+                    "hostname": {
+                        "description": "The reverse record’s fully qualified domain name",
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-\\.]{0,61}[a-zA-Z0-9]$",
+                        "minLength": 1,
+                        "maxLength": 253
+                    },
+                    "ttl": {
+                        "description": "Time-to-live for the PTR record in seconds",
+                        "type": "integer",
+                        "minimum": 0,
+                        "default": 3600
+                    }
+                },
+                "required": ["ip_address", "hostname"],
+                "additionalProperties": false
+            },
+            "minItems": 0
+        },
+        "event_timestamp": {
+            "description": "ISO 8601 timestamp of when the event occurred",
+            "type": "string",
+            "format": "date-time"
+        },
+        "plesk_instance": {
+            "type": "object",
+            "description": "Details about the Plesk instance triggering the event",
+            "properties": {
+                "version": {
+                    "description": "Plesk server version (e.g., '18.0.70')",
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                },
+                "id": {
+                    "description": "Unique identifier for the Plesk instance",
+                    "type": "string",
+                    "minLength": 1
+                }
+            },
+            "required": ["version"],
+            "additionalProperties": false
+        }
+    },
+    "required": ["command", "zone"],
+    "additionalProperties": false,
+    "if": {
+        "properties": {
+            "command": {
+                "enum": ["create", "update"]
+            }
+        },
+        "required": ["command"]
+    },
+    "then": {
+        "properties": {
+            "zone": {
+                "properties": {
+                    "soa": {
+                        "required": ["rr"]
+                    }
+                }
+            }
+        }
+    },
+    "if": {
+        "properties": {
+            "command": {
+                "enum": ["createPTRs", "deletePTRs"]
+            }
+        },
+        "required": ["command"]
+    },
+    "then": {
+        "required": ["ptr"]
+    }
+}

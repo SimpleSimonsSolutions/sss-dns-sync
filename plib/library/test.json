@@ -1,0 +1,18 @@
+{
+    "command": "create",
+    "client_guid": "test-client-guid",
+    "domain_guid": "test-domain-guid",
+    "zone": {
+        "name": "simonkane.net",
+        "soa": {
+            "rr": [
+                {
+                    "host": "test2",
+                    "type": "TXT",
+                    "value": "123two",
+                    "ttl": 3600
+                }
+            ]
+        }
+    }
+}

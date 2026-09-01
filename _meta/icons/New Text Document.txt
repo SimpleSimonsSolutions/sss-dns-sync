@@ -1,0 +1,5 @@
+Size	Location
+32 px * 32 px	_meta/icons/32x32.png
+64 px * 64 px	_meta/icons/64x64.png
+128 px * 128 px	_meta/icons/128x128.png
+Only for paid extensions: 160 px * 160 px	_meta/icons/160x160.png
